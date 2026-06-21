@@ -12,10 +12,18 @@ services:
     rootDir: backend
     plan: free
     envVars:
-      - key: SPRING_DATASOURCE_URL
+      - key: SPRING_DATASOURCE_HOST
         fromDatabase:
           name: ecom-db
-          property: connectionString
+          property: host
+      - key: SPRING_DATASOURCE_PORT
+        fromDatabase:
+          name: ecom-db
+          property: port
+      - key: SPRING_DATASOURCE_DB
+        fromDatabase:
+          name: ecom-db
+          property: database
       - key: SPRING_DATASOURCE_USERNAME
          # For database connection
         fromDatabase:
