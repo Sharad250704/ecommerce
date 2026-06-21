@@ -1,10 +1,9 @@
 # Build stage
 FROM maven:3.8.8-eclipse-temurin-17-alpine AS build
 WORKDIR /app
-COPY pom.xml .
-RUN mvn dependency:go-offline -B
-COPY src ./src
+COPY . .
 RUN mvn clean package -DskipTests
+
 
 # Run stage
 FROM eclipse-temurin:17-jre-alpine
