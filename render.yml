@@ -1,0 +1,55 @@
+databases:
+  - name: ecom-db
+    databaseName: neondb
+    user: neondb_owner
+    plan: free
+
+services:
+  # Spring Boot Java Backend
+  - type: web
+    name: ecom-backend
+    runtime: docker
+    rootDir: backend
+    plan: free
+    envVars:
+      - key: SPRING_DATASOURCE_URL
+        fromDatabase:
+          name: ecom-db
+          property: connectionString
+      - key: SPRING_DATASOURCE_USERNAME
+         # For database connection
+        fromDatabase:
+          name: ecom-db
+          property: user
+      - key: SPRING_DATASOURCE_PASSWORD
+        fromDatabase:
+          name: ecom-db
+          property: password
+      - key: JWT_SECRET
+        generateValue: true
+      - key: RAZORPAY_KEY
+        sync: false
+      - key: RAZORPAY_SECRET
+        sync: false
+      - key: CLOUDINARY_CLOUD_NAME
+        sync: false
+      - key: CLOUDINARY_API_KEY
+        sync: false
+      - key: CLOUDINARY_API_SECRET
+        sync: false
+
+  # React Frontend (Static Site)
+  - type: web
+    name: ecom-frontend
+    runtime: static
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    plan: free
+    envVars:
+      - key: VITE_API_BASE_URL
+        sync: false
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
